@@ -1,5 +1,5 @@
 
-package com.uberspot.a2048;
+package com.thecoderok.game2048;
 
 import java.util.Locale;
 
@@ -26,7 +26,13 @@ import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import de.cketti.library.changelog.ChangeLog;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.thecoderok.game2048.R;
+import com.thecoderok.game2048.a2048.Constants;
+
+// import de.cketti.library.changelog.ChangeLog;
 
 public class MainActivity extends Activity {
 
@@ -40,6 +46,8 @@ public class MainActivity extends Activity {
     private long mLastTouch;
     private static final long mTouchThreshold = 2000;
     private Toast pressBackToast;
+    private AdView mAdView;
+
 
     @SuppressLint({ "SetJavaScriptEnabled", "NewApi", "ShowToast" })
     @Override
@@ -78,11 +86,16 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
-        ChangeLog cl = new ChangeLog(this);
+        MobileAds.initialize(this, Constants.AdMobAppID);
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+
+        /*ChangeLog cl = new ChangeLog(this);
         if (cl.isFirstRun()) {
             cl.getLogDialog().show();
-        }
-
+        }*/
         // Load webview with game
         mWebView = (WebView) findViewById(R.id.mainWebView);
         WebSettings settings = mWebView.getSettings();
@@ -101,9 +114,9 @@ public class MainActivity extends Activity {
             mWebView.loadUrl("file:///android_asset/2048/index.html?lang=" + Locale.getDefault().getLanguage());
         }
 
-        Toast.makeText(getApplication(), R.string.toggle_fullscreen, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getApplication(), R.string.toggle_fullscreen, Toast.LENGTH_SHORT).show();
         // Set fullscreen toggle on webview LongClick
-        mWebView.setOnTouchListener(new OnTouchListener() {
+        /*mWebView.setOnTouchListener(new OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -122,7 +135,7 @@ public class MainActivity extends Activity {
                 // by the webview as well
                 return false;
             }
-        });
+        });*/
 
         pressBackToast = Toast.makeText(getApplicationContext(), R.string.press_back_again_to_exit,
                 Toast.LENGTH_SHORT);
