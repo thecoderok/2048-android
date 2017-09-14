@@ -88,7 +88,8 @@ public class MainActivity extends Activity {
 
         MobileAds.initialize(this, Constants.AdMobAppID);
         mAdView = (AdView) findViewById(R.id.adView);
-        mAdView.setAdUnitId(Constants.DefaultBannerPlacement);
+        //mAdView.setVisibility(View.VISIBLE);
+        //mAdView.setAdUnitId(Constants.DefaultBannerPlacement);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
