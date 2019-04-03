@@ -26,13 +26,17 @@ import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
+/*import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+*/
 import com.thecoderok.game2048.R;
 import com.thecoderok.game2048.a2048.Constants;
 
 // import de.cketti.library.changelog.ChangeLog;
+
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 public class MainActivity extends Activity {
 
@@ -46,7 +50,8 @@ public class MainActivity extends Activity {
     private long mLastTouch;
     private static final long mTouchThreshold = 2000;
     private Toast pressBackToast;
-    private AdView mAdView;
+    private AppEventsLogger logger;
+    //private AdView mAdView;
 
 
     @SuppressLint({ "SetJavaScriptEnabled", "NewApi", "ShowToast" })
@@ -86,12 +91,12 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
-        MobileAds.initialize(this, Constants.AdMobAppID);
+        /*MobileAds.initialize(this, Constants.AdMobAppID);
         mAdView = (AdView) findViewById(R.id.adView);
         //mAdView.setVisibility(View.VISIBLE);
         //mAdView.setAdUnitId(Constants.DefaultBannerPlacement);
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        mAdView.loadAd(adRequest);*/
 
 
         /*ChangeLog cl = new ChangeLog(this);
@@ -141,6 +146,7 @@ public class MainActivity extends Activity {
 
         pressBackToast = Toast.makeText(getApplicationContext(), R.string.press_back_again_to_exit,
                 Toast.LENGTH_SHORT);
+        this.logger = AppEventsLogger.newLogger(this);
     }
 
     @Override
@@ -206,5 +212,13 @@ public class MainActivity extends Activity {
             pressBackToast.cancel();
             super.onBackPressed();
         }
+    }
+
+    /**
+     * This function assumes logger is an instance of AppEventsLogger and has been
+     * created using AppEventsLogger.newLogger() call.
+     */
+    public void logSentFriendRequestEvent () {
+        logger.logEvent("sentFriendRequest");
     }
 }
