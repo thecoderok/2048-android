@@ -37,6 +37,7 @@ import com.thecoderok.game2048.a2048.Constants;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.android.gms.ads.InterstitialAd;
 
 public class MainActivity extends Activity {
 
@@ -53,6 +54,7 @@ public class MainActivity extends Activity {
     private AppEventsLogger logger;
     //private AdView mAdView;
 
+    private InterstitialAd mInterstitialAd;
 
     @SuppressLint({ "SetJavaScriptEnabled", "NewApi", "ShowToast" })
     @Override
@@ -91,8 +93,8 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
-        /*MobileAds.initialize(this, Constants.AdMobAppID);
-        mAdView = (AdView) findViewById(R.id.adView);
+        MobileAds.initialize(this, Constants.AdMobAppID);
+        /*mAdView = (AdView) findViewById(R.id.adView);
         //mAdView.setVisibility(View.VISIBLE);
         //mAdView.setAdUnitId(Constants.DefaultBannerPlacement);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -147,6 +149,36 @@ public class MainActivity extends Activity {
         pressBackToast = Toast.makeText(getApplicationContext(), R.string.press_back_again_to_exit,
                 Toast.LENGTH_SHORT);
         this.logger = AppEventsLogger.newLogger(this);
+
+        this.mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the interstitial ad is closed.
+            }
+        });
+        mInterstitialAd.setAdUnitId(Constants.InterstitialPlacement);
+        mInterstitialAd.loadAd(new AdRequest.Builder().tagForChildDirectedTreatment(true).build());
     }
 
     @Override
