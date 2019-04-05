@@ -176,11 +176,13 @@ public class MainActivity extends Activity {
 
             @Override
             public void onAdClosed() {
-                // Code to be executed when the interstitial ad is closed.
+                // Load the next interstitial.
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
             }
         });
         mInterstitialAd.setAdUnitId(Constants.InterstitialPlacement);
         mInterstitialAd.loadAd(new AdRequest.Builder().tagForChildDirectedTreatment(true).build());
+        mInterstitialAd.show();
     }
 
     @Override
@@ -254,5 +256,13 @@ public class MainActivity extends Activity {
      */
     public void logSentFriendRequestEvent () {
         logger.logEvent("sentFriendRequest");
+    }
+
+    public void showAd(){
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+        }
     }
 }
