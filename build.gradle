@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.android.support:support-v4:23.3.0'
+    implementation 'com.android.support:support-v4:26.3.0'
     implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
     implementation 'com.google.android.gms:play-services-ads:10.2.4'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'

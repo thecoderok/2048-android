@@ -114,6 +114,7 @@ public class MainActivity extends Activity {
         settings.setDatabaseEnabled(true);
         settings.setRenderPriority(RenderPriority.HIGH);
         settings.setDatabasePath(getFilesDir().getParentFile().getPath() + "/databases");
+        mWebView.addJavascriptInterface(new WebAppInterface(this), "AndroidAppConnector");
 
         // If there is a previous instance restore it in the webview
         if (savedInstanceState != null) {
