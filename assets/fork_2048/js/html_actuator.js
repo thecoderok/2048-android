@@ -148,9 +148,6 @@ HTMLActuator.prototype.promptRestart = function () {
   var message = "Start a new game?";
   this.messageContainer.classList.add("restart-game");
   this.messageContainer.getElementsByTagName("p")[0].textContent = message;
-  if(typeof AndroidAppConnector !== "undefined" && AndroidAppConnector !== null) {
-        AndroidAppConnector.showToast("test");
-    }
 };
 
 HTMLActuator.prototype.clearMessage = function () {

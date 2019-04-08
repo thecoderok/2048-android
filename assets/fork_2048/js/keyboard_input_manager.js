@@ -139,6 +139,12 @@ KeyboardInputManager.prototype.undoMove = function (event) {
 KeyboardInputManager.prototype.restart = function (event) {
   event.preventDefault();
   this.emit("restart");
+  try {
+    if(typeof AndroidAppConnector !== "undefined" && AndroidAppConnector !== null) {
+        AndroidAppConnector.showInterstitial();
+    }
+  } catch(e){
+  }
 };
 
 KeyboardInputManager.prototype.restartWithConfirmation = function (event) {

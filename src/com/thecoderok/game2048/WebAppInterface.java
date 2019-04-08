@@ -12,9 +12,8 @@ public class WebAppInterface {
         mContext = c;
     }
 
-    /** Show a toast from the web page */
     @JavascriptInterface
-    public void showToast(String toast) {
+    public void showInterstitial() {
         mContext.runOnUiThread(new Runnable() {
             public void run() {
                 mContext.showAd();
