@@ -122,7 +122,7 @@ public class MainActivity extends Activity {
             mWebView.restoreState(savedInstanceState);
         } else {
         	// Load webview with current Locale language
-            mWebView.loadUrl("file:///android_asset/2048/index.html?lang=" + Locale.getDefault().getLanguage());
+            mWebView.loadUrl("file:///android_asset/fork_2048/index.html?lang=" + Locale.getDefault().getLanguage());
         }
 
        // Toast.makeText(getApplication(), R.string.toggle_fullscreen, Toast.LENGTH_SHORT).show();
