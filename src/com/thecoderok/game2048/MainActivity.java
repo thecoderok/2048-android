@@ -95,17 +95,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         MobileAds.initialize(this, Constants.AdMobAppID);
-        /*mAdView = (AdView) findViewById(R.id.adView);
-        //mAdView.setVisibility(View.VISIBLE);
-        //mAdView.setAdUnitId(Constants.DefaultBannerPlacement);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);*/
 
-
-        /*ChangeLog cl = new ChangeLog(this);
-        if (cl.isFirstRun()) {
-            cl.getLogDialog().show();
-        }*/
         // Load webview with game
         mWebView = (WebView) findViewById(R.id.mainWebView);
         WebSettings settings = mWebView.getSettings();
