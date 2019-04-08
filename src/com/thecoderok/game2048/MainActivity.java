@@ -1,8 +1,6 @@
 
 package com.thecoderok.game2048;
 
-import java.util.Locale;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -15,9 +13,6 @@ import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -26,19 +21,17 @@ import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
-
-import com.thecoderok.game2048.R;
 import com.thecoderok.game2048.a2048.Constants;
 
-// import de.cketti.library.changelog.ChangeLog;
+import java.util.Locale;
 
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-import com.google.android.gms.ads.InterstitialAd;
+// import de.cketti.library.changelog.ChangeLog;
 
 public class MainActivity extends Activity {
 
@@ -146,22 +139,27 @@ public class MainActivity extends Activity {
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
+                logger.logEvent("AdLoaded");
                 // Code to be executed when an ad finishes loading.
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                // Code to be executed when an ad request fails.
+                Bundle params = new Bundle();
+                params.putInt("error_code", errorCode);
+                logger.logEvent("onAdFailedToLoad", params);
             }
 
             @Override
             public void onAdOpened() {
-                // Code to be executed when the ad is displayed.
+                Bundle params = new Bundle();
+                params.putString(AppEventsConstants.EVENT_PARAM_AD_TYPE, "admob");
+                logger.logEvent(AppEventsConstants.EVENT_NAME_AD_IMPRESSION, params);
             }
 
             @Override
             public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
+                logger.logEvent("onAdLeftApplication");
             }
 
             @Override
@@ -249,10 +247,18 @@ public class MainActivity extends Activity {
     }
 
     public void showAd(){
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        } else {
-            Log.d("TAG", "The interstitial wasn't loaded yet.");
+        try {
+            if (mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
+            } else {
+                Log.d("TAG", "The interstitial wasn't loaded yet.");
+                logger.logEvent("AdNotLoadedYet");
+            }
+        } catch(Exception e){
+            Bundle params = new Bundle();
+            params.putString("message", e.getMessage());
+            logger.logEvent("exception", params);
         }
+
     }
 }
