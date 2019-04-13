@@ -3,6 +3,10 @@ package com.thecoderok.game2048;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -12,24 +16,32 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.ads.AdSize;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.thecoderok.game2048.a2048.Constants;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 // import de.cketti.library.changelog.ChangeLog;
 
@@ -46,7 +58,7 @@ public class MainActivity extends Activity {
     private static final long mTouchThreshold = 2000;
     private Toast pressBackToast;
     private AppEventsLogger logger;
-    //private AdView mAdView;
+    private AdView mAdView;
 
     private InterstitialAd mInterstitialAd;
 
@@ -108,29 +120,6 @@ public class MainActivity extends Activity {
             mWebView.loadUrl("file:///android_asset/fork_2048/index.html?lang=" + Locale.getDefault().getLanguage());
         }
 
-       // Toast.makeText(getApplication(), R.string.toggle_fullscreen, Toast.LENGTH_SHORT).show();
-        // Set fullscreen toggle on webview LongClick
-        /*mWebView.setOnTouchListener(new OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // Implement a long touch action by comparing
-                // time between action up and action down
-                long currentTime = System.currentTimeMillis();
-                if ((event.getAction() == MotionEvent.ACTION_UP)
-                        && (Math.abs(currentTime - mLastTouch) > mTouchThreshold)) {
-                    boolean toggledFullScreen = !isFullScreen();
-                    saveFullScreen(toggledFullScreen);
-                    applyFullScreen(toggledFullScreen);
-                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mLastTouch = currentTime;
-                }
-                // return so that the event isn't consumed but used
-                // by the webview as well
-                return false;
-            }
-        });*/
-
         pressBackToast = Toast.makeText(getApplicationContext(), R.string.press_back_again_to_exit,
                 Toast.LENGTH_SHORT);
         this.logger = AppEventsLogger.newLogger(this);
@@ -170,7 +159,9 @@ public class MainActivity extends Activity {
         });
         mInterstitialAd.setAdUnitId(Constants.InterstitialPlacement);
         mInterstitialAd.loadAd(new AdRequest.Builder().tagForChildDirectedTreatment(true).build());
-        mInterstitialAd.show();
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().tagForChildDirectedTreatment(true).build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override
@@ -183,18 +174,6 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         // getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }
-    
-    /**
-     * Saves the full screen setting in the SharedPreferences
-     * @param isFullScreen
-     */
-
-    private void saveFullScreen(boolean isFullScreen) {
-        // save in preferences
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putBoolean(IS_FULLSCREEN_PREF, isFullScreen);
-        editor.commit();
     }
 
     private boolean isFullScreen() {
@@ -228,14 +207,71 @@ public class MainActivity extends Activity {
     
     @Override
     public void onBackPressed() {
+
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
+        dialog.setContentView(R.layout.activity_alert_dialog_custom_view);
+
+        LayoutInflater inflater =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View main = inflater.inflate(R.layout.activity_alert_dialog_custom_view, null);
+        dialog.setContentView(main);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+        LinearLayout linear = (LinearLayout)main.findViewById(R.id.adView);
+
+        AdView ad = new AdView(this);
+        ad.setAdUnitId("ca-app-pub-5782522808004813/9802466084");
+        ad.setAdSize(com.google.android.gms.ads.AdSize.MEDIUM_RECTANGLE);
+
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        linear.addView(ad);
+        ad.loadAd(adRequest);
+
+        dialog.setTitle("Title :");
+        dialog.setCancelable(true);
+
+        //set up text
+        /*TextView text = (TextView) dialog.findViewById(R.id.hint_text);
+        text.setText(hint);*/
+
+
+        //set up button
+        /*Button button = (Button) dialog.findViewById(R.id.Button01);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });*/
+
+        // now that the dialog is set up, it's time to show it
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.show();
+        dialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_launcher);
+        dialog.getWindow().setAttributes(lp);
+        dialog.getWindow().getAttributes().width = LayoutParams.FILL_PARENT;
+        dialog.getWindow().getAttributes().height = LayoutParams.WRAP_CONTENT;
+
+        /*new AlertDialog.Builder(this)
+                .setTitle("Really Exit?")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        MainActivity.super.onBackPressed();
+                    }
+                }).create().show();*/
+/*
         long currentTime = System.currentTimeMillis();
         if (Math.abs(currentTime - mLastBackPress) > mBackPressThreshold) {
             pressBackToast.show();
             mLastBackPress = currentTime;
+            this.showAd();
         } else {
             pressBackToast.cancel();
             super.onBackPressed();
-        }
+        }*/
     }
 
     /**
