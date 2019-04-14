@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.support.v4.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,9 +45,8 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-// import de.cketti.library.changelog.ChangeLog;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     private static final String MAIN_ACTIVITY_TAG = "2048_MainActivity";
 
@@ -207,8 +208,13 @@ public class MainActivity extends Activity {
     
     @Override
     public void onBackPressed() {
+        DialogFragment newFragment = new ExitAppDialogFragment();
+        newFragment.show(getSupportFragmentManager(), "missiles");
 
-        final Dialog dialog = new Dialog(MainActivity.this);
+
+
+
+        /*final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
         dialog.setContentView(R.layout.activity_alert_dialog_custom_view);
 
@@ -232,17 +238,17 @@ public class MainActivity extends Activity {
         dialog.setCancelable(true);
 
         //set up text
-        /*TextView text = (TextView) dialog.findViewById(R.id.hint_text);
-        text.setText(hint);*/
+        TextView text = (TextView) dialog.findViewById(R.id.hint_text);
+        text.setText(hint);
 
 
         //set up button
-        /*Button button = (Button) dialog.findViewById(R.id.Button01);
+        Button button = (Button) dialog.findViewById(R.id.Button01);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dialog.dismiss();
             }
-        });*/
+        });
 
         // now that the dialog is set up, it's time to show it
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -250,7 +256,7 @@ public class MainActivity extends Activity {
         dialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_launcher);
         dialog.getWindow().setAttributes(lp);
         dialog.getWindow().getAttributes().width = LayoutParams.FILL_PARENT;
-        dialog.getWindow().getAttributes().height = LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().getAttributes().height = LayoutParams.WRAP_CONTENT;*/
 
         /*new AlertDialog.Builder(this)
                 .setTitle("Really Exit?")
